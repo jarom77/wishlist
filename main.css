@@ -92,7 +92,7 @@ tr:nth-child(even) td {
     text-align: center;
 }
 
-button {
+button, a.button {
     background-color: #3498db;
     color: #fff;
     border: none;
@@ -101,9 +101,12 @@ button {
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s;
+    display: inline-block;
+    height: 48px;
+    width: 48px;
 }
 
-button:hover {
+button:hover, a.button:hover {
     background-color: #2980b9;
 }
 
