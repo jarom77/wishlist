@@ -1,0 +1,5 @@
+DirectoryIndex login.html
+<Files "config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
