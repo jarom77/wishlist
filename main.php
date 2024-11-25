@@ -25,7 +25,6 @@ if ($conn->connect_error) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wish List</title>
     <link rel="stylesheet" href="main.css">
 </head>
@@ -33,38 +32,62 @@ if ($conn->connect_error) {
     <div class="page-container">
         <h1>Family Gift List</h1>
         <div class="column-container" id="table-container">
-            <div class="column" id="column-1">
-                <h2><?php echo $dispname; ?></h2>
-                <table>
-                <?php
-                    $stmt = $conn->prepare("SELECT text,link FROM list WHERE userid = ?");
-                    if (!$stmt) die("failed to prepare statement");
-                    $stmt->bind_param("s", $userid); // Bind the username parameter
-                    $stmt->execute();
-                    $result = $stmt->get_result();
+<?php
+$access_stmt = $conn->prepare("SELECT can_view, dispname FROM access inner join users on access.can_view = users.id WHERE uid = ?");
+if (!$access_stmt) die("failed to prepare statement");
+$access_stmt->bind_param("s", $userid); // Bind the username parameter
+$access_stmt->execute();
+$access_result = $access_stmt->get_result();
 
-                    while ($row = $result->fetch_assoc()) {
-                        echo '<tr>
-                        <td>' . $row['text'] . '</td>
-                            <td>
+$stmt = $conn->prepare("SELECT text,link FROM list WHERE userid = ?");
+if (!$stmt) die("failed to prepare statement");
+$person = NULL;
+do {
+    echo '
+            <div class="column"';
+    if ($person == NULL) echo 'id="column-1"';
+    echo '>
+                <h2>';
+    if ($person == NULL) echo $dispname;
+    else echo $person['dispname'];
+    echo '</h2>
+                <table>';
+    if ($person == NULL) $stmt->bind_param("d", $userid); // Bind the username parameter
+    else $stmt->bind_param("d", $person['can_view']);
+    
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    while ($row = $result->fetch_assoc()) {
+        echo "
+                    <tr>
+                        <td>${row['text']}</td>
+                        <td>";
+        if ($row['link']) echo '
+                            <a class="button" href="'.$row['link'].'"><img class="icon" src="icon_open.png"></a>';
+        if ($person == NULL) echo '
                             <button onclick="location.href=\'script1.php\';">
                                 <img class="icon" src="icon_edit.png" />
                             </button>
                             <button onclick="location.href=\'script2.php\';" class="trash">
                                 <img class="icon" src="icon_delete.png">
                             </button>';
-                        if ($row['link']) echo '
-                            <a class="button" href="'.$row['link'].'"><img class="icon" src="icon_open.png"></a>';
-                        echo '
+        else echo '
+                            <button onclick="location.href=\'script1.php\';" class="check">
+                                <img class="icon" src="icon_check.png" />
+                            </button>';
+        echo '
                         </td>
                     </tr>';
-                    }
-                    $stmt->close();
-                ?>
+    }
+    echo '
                 </table>
-                <div class="button-container">
-                                    </div>
-            </div>
+            </div>';
+} while ($person = $access_result->fetch_assoc());
+
+$stmt->close();
+$access_stmt->close();
+?>
         </div>
     </div>
     <script src="main.js"></script>
