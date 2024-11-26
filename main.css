@@ -74,11 +74,20 @@ td {
 }
 
 td.item {
-    width: 60%;
+    width: 40%;
+}
+
+td.link {
+    width: 20%;
 }
 
 td.buttons {
+    width: 140px;
     text-align: right;
+}
+
+#column-1 td.buttons {
+    width: inherit;
 }
 
 /* Button styling */
