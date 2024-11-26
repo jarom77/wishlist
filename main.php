@@ -62,7 +62,7 @@ do {
         echo "
                     <tr>
                         <td>${row['text']}</td>
-                        <td class=\"buttons\">";
+                        <td class=\"buttons\" colspan=\"2\">";
         if ($row['link']) echo '
                             <a class="button" href="'.$row['link'].'"><img class="icon" src="icon_open.png"></a>';
         if ($person == NULL) echo '
@@ -80,6 +80,16 @@ do {
                         </td>
                     </tr>';
     }
+    if ($person == NULL) echo '
+                    <tr>
+                        <form action="addItem.php" method="POST">
+                            <td class="item"><input id="item" type="text" maxlength="255" placeholder="description"></td>
+                            <td><input id="link" type="text" maxlength="400" placeholder="link [optional]"></td>
+                            <td><button type="submit" class="check">
+                                    <img class="icon" src="icon_plus.png" />
+                            </button></td>
+                        </form>
+                    </tr>';
     echo '
                 </table>
             </div>';

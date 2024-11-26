@@ -73,6 +73,10 @@ td {
     text-align: left;
 }
 
+td.item {
+    width: 60%;
+}
+
 td.buttons {
     text-align: right;
 }
@@ -119,6 +123,11 @@ button:focus {
 
 .edit {
     background-color: #444;
+}
+
+input {
+    height: 1.75em;
+    width: 100%;
 }
 
 /* Responsive Design */
