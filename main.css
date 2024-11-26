@@ -52,7 +52,7 @@ h2 {
 .column {
     width: 32%; /* Three columns side by side */
     background-color: #ecf0f1;
-    padding: 5px;
+    padding: 5px 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -64,26 +64,17 @@ table {
     margin-bottom: 20px;
 }
 
-table, th, td {
-    border: 1px solid #34495e;
+tr {
+    border-bottom: 1px solid #555;
 }
 
-th, td {
+td {
     padding: 10px;
     text-align: left;
 }
 
-th {
-    background-color: #3498db;
-    color: #fff;
-}
-
-td {
-    background-color: #fff;
-}
-
-tr:nth-child(even) td {
-    background-color: #f4f4f4;
+td.buttons {
+    text-align: right;
 }
 
 /* Button styling */
@@ -115,11 +106,19 @@ button:focus {
 }
 
 .icon {
-    height: 1.5em;
+    height: 100%;
 }
 
 .trash {
     background-color: #c33;
+}
+
+.check {
+    background-color: #2c2;
+}
+
+.edit {
+    background-color: #444;
 }
 
 /* Responsive Design */

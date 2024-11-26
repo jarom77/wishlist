@@ -62,11 +62,11 @@ do {
         echo "
                     <tr>
                         <td>${row['text']}</td>
-                        <td>";
+                        <td class=\"buttons\">";
         if ($row['link']) echo '
                             <a class="button" href="'.$row['link'].'"><img class="icon" src="icon_open.png"></a>';
         if ($person == NULL) echo '
-                            <button onclick="location.href=\'script1.php\';">
+                            <button onclick="location.href=\'script1.php\';" class="edit">
                                 <img class="icon" src="icon_edit.png" />
                             </button>
                             <button onclick="location.href=\'script2.php\';" class="trash">
