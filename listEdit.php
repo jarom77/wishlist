@@ -1,6 +1,18 @@
 <?php
 session_start();
 
+// check that user owns item
+function check_user_owns($uid, $itemid) {
+    $stmt = $conn->prepare('select COUNT(id) from list where userid = ? and id = ?');
+    $stmt->bind_param('ii',$userid,$itemid);
+    $stmt->execute();
+    $count = $stmt->get_result()->fetch_row()[0];
+    $stmt->close();
+    if ($count == 0) die("You are being bad. You don't want to mess with the database. Go home and rethink your life.");
+    else if ($count != 1) die("Something impossible happened. Apparently there are multiple IDs that match this item.");
+    return ($count == 1);
+}
+
 if (!isset($_SESSION['userid'])) {
     // If not logged in, redirect to the login page
     header("Location: login.html");
@@ -22,17 +34,22 @@ if ($conn->connect_error) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_POST['itemid'])) die('no item specified!');
     $itemid = $_POST['itemid'];
-    
+
     if (isset($_POST['edit'])) die('edit item ' . $itemid);
-    else if (isset($_POST['delete'])) die('delete item '. $itemid);
-    else if (isset($_POST['claim'])) die('claim item ' . $itemid);
-    die('Bad trigger criteria!');
-    $stmt = $conn->prepare('insert into list (userid, text, link, recurring) values (?, ?, ?, ?)');
-    if ($stmt) {
-        $stmt->bind_param('issi', $userid, $item, $link, $multiple);
+    else {
+        $field = '';
+        if (isset($_POST['delete'])) {
+	    check_user_owns($userid, $itemid);
+	    $stmt = $conn->prepare('update list set removed = 1 where id = ?');
+	    $stmt->bind_param('i', $itemid);
+        } else if (isset($_POST['claim'])) {
+            $stmt = $conn->prepare('update list set claimed = ? where id = ?');
+            $stmt->bind_param('ii', $userid, $itemid);
+        }
+        else die('Invalid button');
         $stmt->execute();
         header('Location: main.php');
-    } else die('insert failed');
+    }
 } else die("no post");
 ?>
 

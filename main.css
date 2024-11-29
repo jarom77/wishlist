@@ -90,6 +90,10 @@ td.buttons {
     width: inherit;
 }
 
+form {
+    display: inline;
+}
+
 /* Button styling */
 .button-container {
     margin-top: 20px;

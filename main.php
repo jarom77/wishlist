@@ -39,7 +39,7 @@ $access_stmt->bind_param("s", $userid); // Bind the username parameter
 $access_stmt->execute();
 $access_result = $access_stmt->get_result();
 
-$stmt = $conn->prepare("SELECT text,link FROM list WHERE userid = ?");
+$stmt = $conn->prepare("SELECT id,text,link FROM list WHERE userid = ?");
 if (!$stmt) die("failed to prepare statement");
 $person = NULL;
 do {
@@ -65,18 +65,22 @@ do {
                         <td class=\"buttons\" colspan=\"2\">";
         if ($row['link']) echo '
                             <a class="button" href="'.$row['link'].'"><img class="icon" src="icon_open.png"></a>';
-        if ($person == NULL) echo '
-                            <button onclick="location.href=\'script1.php\';" class="edit">
-                                <img class="icon" src="icon_edit.png" />
-                            </button>
-                            <button onclick="location.href=\'script2.php\';" class="trash">
-                                <img class="icon" src="icon_delete.png">
-                            </button>';
-        else echo '
-                            <button onclick="location.href=\'script1.php\';" class="check">
-                                <img class="icon" src="icon_check.png" />
-                            </button>';
         echo '
+                            <form action="listEdit.php" method="post">
+                                <input hidden name="itemid" value="' . $row['id'] . '">';
+        if ($person == NULL) echo '
+                                <button type="submit" name="edit" class="edit">
+                                    <img class="icon" src="icon_edit.png" />
+                                </button>
+                                <button type="submit" name="delete" class="trash">
+                                    <img class="icon" src="icon_delete.png">
+                                </button>';
+        else echo '
+                                <button type="submit" name="claim" class="check">
+                                    <img class="icon" src="icon_check.png" />
+                                </button>';
+        echo '
+                            </form>
                         </td>
                     </tr>';
     }
