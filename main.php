@@ -39,7 +39,7 @@ $access_stmt->bind_param("s", $userid); // Bind the username parameter
 $access_stmt->execute();
 $access_result = $access_stmt->get_result();
 
-$stmt = $conn->prepare("SELECT id,text,link FROM list WHERE userid = ?");
+$stmt = $conn->prepare("SELECT id,text,link,recurring FROM list WHERE userid = ?");
 if (!$stmt) die("failed to prepare statement");
 $person = NULL;
 do {
@@ -75,7 +75,7 @@ do {
                                 <button type="submit" name="delete" class="trash">
                                     <img class="icon" src="icon_delete.png">
                                 </button>';
-        else echo '
+        else if (!$row['recurring']) echo '
                                 <button type="submit" name="claim" class="check">
                                     <img class="icon" src="icon_check.png" />
                                 </button>';
