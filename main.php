@@ -83,9 +83,9 @@ do {
     if ($person == NULL) echo '
                     <tr>
                         <form action="addItem.php" method="POST">
-                            <td class="item"><input id="item" required type="text" maxlength="255" placeholder="description"></td>
-                            <td class="link"><input id="link" type="text" maxlength="400" placeholder="link [optional]"></td>
-                            <td style="text-align: center;">Multiple<input type="checkbox" id="recurring" value="true"></td>
+                            <td class="item"><input name="item" required type="text" maxlength="255" placeholder="description"></td>
+                            <td class="link"><input name="link" type="text" maxlength="400" placeholder="link [optional]"></td>
+                            <td style="text-align: center;">Multiple<input type="checkbox" name="recurring" value="true"></td>
                             <td class="buttons"><button type="submit" class="check">
                                 <img class="icon" src="icon_plus.png" />
                             </button></td>
