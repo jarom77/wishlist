@@ -39,7 +39,7 @@ $access_stmt->bind_param("s", $userid); // Bind the username parameter
 $access_stmt->execute();
 $access_result = $access_stmt->get_result();
 
-$stmt = $conn->prepare("SELECT id,text,link,recurring FROM list WHERE userid = ?");
+$stmt = $conn->prepare("SELECT id,text,link,recurring,claimed FROM list WHERE userid = ?");
 if (!$stmt) die("failed to prepare statement");
 $person = NULL;
 do {
@@ -59,8 +59,13 @@ do {
     $result = $stmt->get_result();
     
     while ($row = $result->fetch_assoc()) {
+        $claimed_button_code = '';
+        if ($row['claimed'] == $userid) $claimed_button_code = ' style="background-color: red"';
+        $claimed_style = '';
+        if ($row['claimed'] && $person != NULL) $claimed_style = ' style="background-color: rgba(255,0,0,0.25)"';
+
         echo "
-                    <tr>
+                    <tr$claimed_style>
                         <td colspan=\"2\">${row['text']}</td>
                         <td class=\"buttons\" colspan=\"2\">";
         if ($row['link']) echo '
@@ -75,8 +80,8 @@ do {
                                 <button type="submit" name="delete" class="trash">
                                     <img class="icon" src="icon_delete.png">
                                 </button>';
-        else if (!$row['recurring']) echo '
-                                <button type="submit" name="claim" class="check">
+        else if (!($row['recurring'] || $row['claimed'] != 0 && $row['claimed'] != $userid)) echo '
+                                <button type="submit" name="claim" class="check"' . $claimed_button_code . '>
                                     <img class="icon" src="icon_check.png" />
                                 </button>';
         echo '
