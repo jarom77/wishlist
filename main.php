@@ -60,7 +60,11 @@ do {
     
     while ($row = $result->fetch_assoc()) {
         $claimed_button_code = '';
-        if ($row['claimed'] == $userid) $claimed_button_code = ' style="background-color: red"';
+	$claimName = 'claim';
+	if ($row['claimed'] == $userid) {
+            $claimed_button_code = ' style="background-color: red"';
+            $claimName = 'unclaim';
+        }
         $claimed_style = '';
         if ($row['claimed'] && $person != NULL) $claimed_style = ' style="background-color: rgba(255,0,0,0.25)"';
 
@@ -81,7 +85,7 @@ do {
                                     <img class="icon" src="icon_delete.png">
                                 </button>';
         else if (!($row['recurring'] || $row['claimed'] != 0 && $row['claimed'] != $userid)) echo '
-                                <button type="submit" name="claim" class="check"' . $claimed_button_code . '>
+                                <button type="submit" name="'. $claimName .'" class="check"' . $claimed_button_code . '>
                                     <img class="icon" src="icon_check.png" />
                                 </button>';
         echo '

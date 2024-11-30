@@ -45,6 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else if (isset($_POST['claim'])) {
             $stmt = $conn->prepare('update list set claimed = ? where id = ?');
             $stmt->bind_param('ii', $userid, $itemid);
+        } else if (isset($_POST['unclaim'])) {
+            $stmt = $conn->prepare('update list set claimed = 0 where id = ?');
+            $stmt->bind_param('i', $itemid);
         }
         else die('Invalid button');
         $stmt->execute();
