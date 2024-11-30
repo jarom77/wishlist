@@ -59,11 +59,9 @@ do {
     $result = $stmt->get_result();
     
     while ($row = $result->fetch_assoc()) {
-        $claimed_button_code = '';
-	$claimName = 'claim';
+        $claimed_button_code = 'type="button" onclick="openDatePicker(' . $row['id'] . ')"';
 	if ($row['claimed'] == $userid) {
-            $claimed_button_code = ' style="background-color: red"';
-            $claimName = 'unclaim';
+            $claimed_button_code = 'type="submit" style="background-color: red"';
         }
         $claimed_style = '';
         if ($row['claimed'] && $person != NULL) $claimed_style = ' style="background-color: rgba(255,0,0,0.25)"';
@@ -85,7 +83,7 @@ do {
                                     <img class="icon" src="icon_delete.png">
                                 </button>';
         else if (!($row['recurring'] || $row['claimed'] != 0 && $row['claimed'] != $userid)) echo '
-                                <button type="submit" name="'. $claimName .'" class="check"' . $claimed_button_code . '>
+                                <button '.$claimed_button_code.' name="unclaim" class="check">
                                     <img class="icon" src="icon_check.png" />
                                 </button>';
         echo '
@@ -112,6 +110,18 @@ do {
 $stmt->close();
 $access_stmt->close();
 ?>
+        </div>
+    </div>
+    <div id="datePickerModal" class="modal">
+        <div class="modal-content">
+            <form action="listEdit.php" method="post">
+                <h2>Select date gift will be opened</h2>
+                <input required type="date" id="selectedDate" name="giftDate">
+                <input hidden name="itemid" id="dateItemId" value="0">
+                <div class="button-container">
+                    <button class="dateSubmit" name="claim" onclick="submitDate()">Claim</button>
+                </div>
+            </form>
         </div>
     </div>
     <script src="main.js"></script>

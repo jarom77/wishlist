@@ -2,15 +2,19 @@
 session_start();
 
 // check that user owns item
-function check_user_owns($conn, $uid, $itemid) {
+function user_owns($conn, $uid, $itemid) {
     $stmt = $conn->prepare('select COUNT(id) from list where userid = ? and id = ?');
     $stmt->bind_param('ii', $uid, $itemid);
     $stmt->execute();
     $count = $stmt->get_result()->fetch_row()[0];
     $stmt->close();
-    if ($count == 0) die("You are being bad. You don't want to mess with the database. Go home and rethink your life.");
-    else if ($count != 1) die("Something impossible happened. Apparently there are multiple IDs that match this item.");
+    if ($count > 1) die("Something impossible happened. Apparently there are multiple IDs that match this item.");
     return ($count == 1);
+}
+
+function check_user_owns($conn, $uid, $itemid) {
+    if (!user_owns($conn, $uid, $itemid))
+        die("You are being bad. You don't want to mess with the database. Go home and rethink your life.");
 }
 
 if (!isset($_SESSION['userid'])) {
@@ -39,12 +43,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     else {
         $field = '';
         if (isset($_POST['delete'])) {
-	    check_user_owns($conn, $userid, $itemid);
-	    $stmt = $conn->prepare('delete from list where id = ?');
-	    $stmt->bind_param('i', $itemid);
+            check_user_owns($conn, $userid, $itemid);
+            $stmt = $conn->prepare('delete from list where id = ?');
+            $stmt->bind_param('i', $itemid);
         } else if (isset($_POST['claim'])) {
-            $stmt = $conn->prepare('update list set claimed = ? where id = ?');
-            $stmt->bind_param('ii', $userid, $itemid);
+            if (user_owns($conn, $userid, $itemid)) die("Invalid attempt to claim own item");
+            $giftDate = $_POST['giftDate'];
+            die("date: $giftDate");
+            $stmt = $conn->prepare('update list set claimed = ?, giftDate = ? where id = ?');
+            $stmt->bind_param('isi', $userid, $giftDate, $itemid);
         } else if (isset($_POST['unclaim'])) {
             $stmt = $conn->prepare('update list set claimed = 0 where id = ?');
             $stmt->bind_param('i', $itemid);
