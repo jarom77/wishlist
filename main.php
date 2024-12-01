@@ -30,7 +30,10 @@ if ($conn->connect_error) {
 </head>
 <body>
     <div class="page-container">
-        <h1>Family Gift List</h1>
+        <div class="header-container">
+            <h1>Family Gift List</h1>
+            <button class="global-button" onclick="location.href='changePasswd.php'">Change Password</button>
+        </div>
         <div class="column-container" id="table-container">
 <?php
 $access_stmt = $conn->prepare("SELECT can_view, dispname FROM access inner join users on access.can_view = users.id WHERE uid = ?");

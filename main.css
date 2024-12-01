@@ -14,6 +14,35 @@ body {
     align-items: center;
 }
 
+/* Header container using grid layout */
+.header-container {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+}
+
+/* Centered Title */
+h1 {
+    font-size: 2.5em;
+    color: #333;
+    text-align: center;
+    grid-column: 1 / -1; /* Span both columns */
+}
+
+/* Global button styling */
+.global-button {
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+    justify-self: end;
+    margin-top: -120px;
+    transition: background-color 0.3s;
+    width: inherit;
+}
+
 /* Main container for the page */
 .page-container {
     text-align: center;
@@ -23,6 +52,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     margin: 50px;
     width: 100%;
+    position: relative;
 }
 
 /* Title styling */
