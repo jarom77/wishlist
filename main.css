@@ -168,9 +168,24 @@ button:focus {
     background-color: #444;
 }
 
-input {
+input, textarea {
     height: 1.75em;
     width: 100%;
+    margin: 10px 0;
+    padding: 5px;
+}
+
+textarea {
+    height: 4em;
+}
+
+#recurring {
+    width: 50px;
+    vertical-align: middle;
+}
+
+label {
+    font-size: 1.3em;
 }
 
 /* Responsive Design */

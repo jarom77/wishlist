@@ -127,6 +127,21 @@ $access_stmt->close();
             </form>
         </div>
     </div>
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <form action="listEdit.php" method="post">
+                <h2>Enter item information</h2>
+                <input name="item" type="text" maxlength="255" placeholder="description" required>
+                <textarea name="link" type="text" maxlength="400" placeholder="link [optional]"></textarea>
+                <input type="checkbox" name="recurring" id="recurring">
+                <label for="recurring">Multiple</label>
+                <input hidden name="itemid" id="dateItemId" value="0">
+                <div class="button-container">
+                    <button class="dateSubmit" name="submit" onclick="submitItem()">Done</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <script src="main.js"></script>
 </body>
 </html>
