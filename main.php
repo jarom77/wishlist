@@ -70,7 +70,7 @@ do {
         if ($row['claimed'] && $person != NULL) $claimed_style = ' style="background-color: rgba(255,0,0,0.25)"';
 
         echo "
-                    <tr$claimed_style>
+                    <tr id=\"item${row['id']}\"$claimed_style>
                         <td colspan=\"2\">${row['text']}</td>
                         <td class=\"buttons\" colspan=\"2\">";
         if ($row['link']) echo '
@@ -79,7 +79,7 @@ do {
                             <form action="listEdit.php" method="post">
                                 <input hidden name="itemid" value="' . $row['id'] . '">';
         if ($person == NULL) echo '
-                                <button type="submit" name="edit" class="edit">
+                                <button type="button" onclick="openItemWindow(' . $row['id'] .', '. $row['recurring'] .')" name="edit" class="edit">
                                     <img class="icon" src="icon_edit.png" />
                                 </button>
                                 <button type="submit" name="delete" class="trash">
@@ -122,22 +122,22 @@ $access_stmt->close();
                 <input required type="date" id="selectedDate" name="giftDate">
                 <input hidden name="itemid" id="dateItemId" value="0">
                 <div class="button-container">
-                    <button class="dateSubmit" name="claim" onclick="submitDate()">Claim</button>
+                    <button class="dateSubmit" name="claim">Claim</button>
                 </div>
             </form>
         </div>
     </div>
     <div id="itemModal" class="modal">
         <div class="modal-content">
-            <form action="listEdit.php" method="post">
+            <form action="addItem.php" method="post">
                 <h2>Enter item information</h2>
-                <input name="item" type="text" maxlength="255" placeholder="description" required>
-                <textarea name="link" type="text" maxlength="400" placeholder="link [optional]"></textarea>
+                <input name="item" id="desc" type="text" maxlength="255" placeholder="description" required>
+                <textarea name="link" id="link" type="text" maxlength="400" placeholder="link [optional]"></textarea>
                 <input type="checkbox" name="recurring" id="recurring">
                 <label for="recurring">Multiple</label>
-                <input hidden name="itemid" id="dateItemId" value="0">
+                <input hidden name="itemid" id="editItemId" value="0">
                 <div class="button-container">
-                    <button class="dateSubmit" name="submit" onclick="submitItem()">Done</button>
+                    <button class="dateSubmit" name="submit">Done</button>
                 </div>
             </form>
         </div>

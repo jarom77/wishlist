@@ -24,13 +24,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $item = isset($_POST['item']) ? trim($_POST['item']) : 'NULL';
     $link = isset($_POST['link']) ? trim($_POST['link']) : 'NULL';
     $multiple = isset($_POST['recurring']) ? 1 : 0;
+    $itemid = isset($_POST['itemid']) ?  $_POST['itemid'] : 0;
 
-    $stmt = $conn->prepare('insert into list (userid, text, link, recurring) values (?, ?, ?, ?)');
-    if ($stmt) {
-        $stmt->bind_param('issi', $userid, $item, $link, $multiple);
-        $stmt->execute();
-        header('Location: main.php');
-    } else die('insert failed');
+    if ($itemid == 0) {
+        // create new item
+        $stmt = $conn->prepare('insert into list (userid, text, link, recurring) values (?, ?, ?, ?)');
+        if ($stmt) {
+            $stmt->bind_param('issi', $userid, $item, $link, $multiple);
+            $stmt->execute();
+            header('Location: main.php');
+        } else die('insert failed');
+    } else {
+        // edit item
+        $stmt = $conn->prepare('update list set text = ?, link = ?, recurring = ? where id = ? and userid = ?');
+        if ($stmt) {
+            $stmt->bind_param('ssiii', $item, $link, $multiple, $itemid, $userid);
+            $stmt->execute();
+            header('Location: main.php');
+        } else die('insert failed');
+    }
 } else die("no post");
 ?>
 
