@@ -37,10 +37,14 @@ h1 {
     font-size: 1em;
     cursor: pointer;
     border-radius: 5px;
+    margin: 10px;
     justify-self: end;
-    margin-top: -120px;
     transition: background-color 0.3s;
     width: inherit;
+}
+
+#passwd {
+    margin-top: -120px;
 }
 
 /* Main container for the page */
@@ -82,7 +86,7 @@ h2 {
 .column {
     width: 32%; /* Three columns side by side */
     background-color: #ecf0f1;
-    padding: 5px 30px;
+    padding: 10px 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -96,6 +100,14 @@ table {
 
 tr {
     border-bottom: 1px solid #555;
+}
+
+.recurring {
+    background-color: rgba(44,200,0,0.25);
+}
+
+.claimed {
+    background-color: rgba(255,0,0,0.25);
 }
 
 td {

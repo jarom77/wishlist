@@ -32,7 +32,7 @@ if ($conn->connect_error) {
     <div class="page-container">
         <div class="header-container">
             <h1>Family Gift List</h1>
-            <button class="global-button" onclick="location.href='changePasswd.php'">Change Password</button>
+            <button class="global-button" id="passwd" onclick="location.href='changePasswd.php'">Change Password</button>
         </div>
         <div class="column-container" id="table-container">
 <?php
@@ -66,13 +66,14 @@ do {
 	if ($row['claimed'] == $userid) {
             $claimed_button_code = 'type="submit" style="background-color: red"';
         }
-        $claimed_style = '';
-        if ($row['claimed'] && $person != NULL) $claimed_style = ' style="background-color: rgba(255,0,0,0.25)"';
+        $row_classes = '';
+	if ($row['claimed'] && $person != NULL) $row_classes .= 'claimed ';
+	if ($row['recurring']) $row_classes .= 'recurring ';
 
         echo "
-                    <tr id=\"item${row['id']}\"$claimed_style>
-                        <td colspan=\"2\">${row['text']}</td>
-                        <td class=\"buttons\" colspan=\"2\">";
+                    <tr class=\"$row_classes\" id=\"item${row['id']}\">
+                        <td>${row['text']}</td>
+                        <td class=\"buttons\">";
         if ($row['link']) echo '
                             <a class="button" href="'.$row['link'].'"><img class="icon" src="icon_open.png"></a>';
         echo '
@@ -94,19 +95,11 @@ do {
                         </td>
                     </tr>';
     }
-    if ($person == NULL) echo '
-                    <tr>
-                        <form action="addItem.php" method="POST">
-                            <td class="item"><input name="item" required type="text" maxlength="255" placeholder="description"></td>
-                            <td class="link"><input name="link" type="text" maxlength="400" placeholder="link [optional]"></td>
-                            <td style="text-align: center;">Multiple<input type="checkbox" name="recurring" value="true"></td>
-                            <td class="buttons"><button type="submit" class="check">
-                                <img class="icon" src="icon_plus.png" />
-                            </button></td>
-                        </form>
-                    </tr>';
     echo '
-                </table>
+                </table>';
+    if ($person == NULL) echo '
+                <button class="global-button check" onclick="openItemWindow(0,0)">Add New</button>';
+    echo '
             </div>';
 } while ($person = $access_result->fetch_assoc());
 
