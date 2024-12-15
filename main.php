@@ -62,11 +62,9 @@ do {
     $result = $stmt->get_result();
     
     while ($row = $result->fetch_assoc()) {
-        $row_classes = '';
         $notes = '';
         $userClaimed = false;
         if ($person != NULL && $row['recurring']) {
-            $row_classes .= 'recurring ';
             $getNotes = $conn->prepare('select note from notes where itemid = ?;');
             $getNotes->bind_param("i", $row['id']);
             $getNotes->execute();
@@ -86,7 +84,9 @@ do {
         if ($row['claimed'] == $userid || $userClaimed) {
             $claimed_button_code = 'type="submit" style="background-color: red"';
         }
+        $row_classes = '';
         if ($person != NULL && ($userClaimed || $row['claimed'] && !$row['recurring'])) $row_classes .= 'claimed ';
+        if ($person == NULL && $row['recurring']) $row_classes .= 'recurring ';
         echo "
                     <tr class=\"$row_classes\" id=\"item${row['id']}\">
                         <td>${row['text']}</td>
@@ -103,7 +103,7 @@ do {
                                 <button type="submit" name="delete" class="trash">
                                     <img class="icon" src="icon_delete.png">
                                 </button>';
-        else if (!$row['claimed'] || $row['recurring']) echo '
+        else if (!$row['claimed'] || $row['claimed'] == $userid || $row['recurring']) echo '
                                 <button '.$claimed_button_code.' name="unclaim" class="check">
                                     <img class="icon" src="icon_check.png" />
                                 </button>';
@@ -115,6 +115,7 @@ do {
     echo '
                 </table>';
     if ($person == NULL) echo '
+                <p>Green highlight denotes multiple items</p>
                 <button class="global-button check" onclick="openItemWindow(0,0)">Add New</button>';
     echo '
             </div>';
