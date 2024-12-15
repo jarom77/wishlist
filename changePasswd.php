@@ -21,7 +21,7 @@ if (!isset($_SESSION['userid'])) {
         <h1>Change Password</h1>
         <form id="loginForm">
             <input type="password" name="old_password" id="old_password" placeholder="Old password" required>
-            <input type="password" name="new_password" id="new_password" placeholder="New password" required>
+            <input type="password" name="new_password" id="new_password" minlength="10" placeholder="New password" required>
             <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password" required>
             <button type="submit">Update Password</button>
         </form>
