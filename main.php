@@ -63,13 +63,22 @@ do {
     
     while ($row = $result->fetch_assoc()) {
         $claimed_button_code = 'type="button" onclick="openDatePicker(' . $row['id'] . ')"';
-	if ($row['claimed'] == $userid) {
+        if ($row['claimed'] == $userid) {
             $claimed_button_code = 'type="submit" style="background-color: red"';
         }
         $row_classes = '';
-	if ($row['claimed'] && $person != NULL) $row_classes .= 'claimed ';
-	if ($row['recurring']) $row_classes .= 'recurring ';
-
+        if ($row['claimed'] && $person != NULL) $row_classes .= 'claimed ';
+        $notes = '';
+        if ($person != NULL && $row['recurring']) {
+            $row_classes .= 'recurring ';
+            $getNotes = $conn->prepare('select note from notes where itemid = ?;');
+            $getNotes->bind_param("d", $row['id']);
+            $getNotes->execute();
+            $allNotes = $getNotes->get_result();
+            while ($next_note = $allNotes->fetch_assoc()) $notes = $notes . $next_note['note'] . ', ';
+            if (strlen($notes) > 1) $notes = substr($notes, 0, -2);
+            $getNotes->close();
+        }
         echo "
                     <tr class=\"$row_classes\" id=\"item${row['id']}\">
                         <td>${row['text']}</td>
@@ -78,7 +87,8 @@ do {
                             <a class="button" href="'.$row['link'].'"><img class="icon" src="icon_open.png"></a>';
         echo '
                             <form action="listEdit.php" method="post">
-                                <input hidden name="itemid" value="' . $row['id'] . '">';
+                                <input hidden name="itemid" value="' . $row['id'] . '">
+                                <input hidden name="notes" value="' . $notes . '">';
         if ($person == NULL) echo '
                                 <button type="button" onclick="openItemWindow(' . $row['id'] .', '. $row['recurring'] .')" name="edit" class="edit">
                                     <img class="icon" src="icon_edit.png" />
@@ -113,6 +123,11 @@ $access_stmt->close();
             <form action="listEdit.php" method="post">
                 <h2>Select date gift will be opened</h2>
                 <input required type="date" id="selectedDate" name="giftDate">
+                <div id="multiple-notes">
+                    <p>Item notes:</p>
+                    <p id="notes-text"></p>
+                    <input name="note" type="text" maxlength="20" placeholder="color, type, etc">
+                </div>
                 <input hidden name="itemid" id="dateItemId" value="0">
                 <div class="button-container">
                     <button class="dateSubmit" name="claim">Claim</button>
