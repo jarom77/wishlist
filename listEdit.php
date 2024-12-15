@@ -12,8 +12,8 @@ function user_owns($conn, $uid, $itemid) {
     return ($count == 1);
 }
 
-function check_user_owns($conn, $uid, $itemid) {
-    if (!user_owns($conn, $uid, $itemid))
+function check_user_owns($conn, $uid, $itemid, $shouldOwn) {
+    if ($shouldOwn ^ user_owns($conn, $uid, $itemid))
         die("You are being bad. You don't want to mess with the database. Go home and rethink your life.");
 }
 
@@ -43,11 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     else {
         $field = '';
         if (isset($_POST['delete'])) {
-            check_user_owns($conn, $userid, $itemid);
+            check_user_owns($conn, $userid, $itemid, True);
             $stmt = $conn->prepare('delete from list where id = ?');
             $stmt->bind_param('i', $itemid);
         } else if (isset($_POST['claim'])) {
-            if (user_owns($conn, $userid, $itemid)) die("Invalid attempt to claim own item");
+            check_user_owns($conn, $userid, $itemid, False);
             $giftDate = $_POST['giftDate'];
             $stmt = $conn->prepare('update list set claimed = ?, giftDate = ? where id = ? && recurring = 0');
             $stmt->bind_param('isi', $userid, $giftDate, $itemid);
