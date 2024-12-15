@@ -49,8 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else if (isset($_POST['claim'])) {
             if (user_owns($conn, $userid, $itemid)) die("Invalid attempt to claim own item");
             $giftDate = $_POST['giftDate'];
-            $stmt = $conn->prepare('update list set claimed = ?, giftDate = ? where id = ?');
+            $stmt = $conn->prepare('update list set claimed = ?, giftDate = ? where id = ? && recurring = 0');
             $stmt->bind_param('isi', $userid, $giftDate, $itemid);
+            $stmt->execute();
+            $stmt->close();
+        
+            // add note
+            $note = $_POST['note'];
+            $stmt = $conn->prepare('insert into notes(itemid, userid, note) values (?, ?, ?)');
+            $stmt->bind_param('iis', $itemid, $userid, $note);
         } else if (isset($_POST['unclaim'])) {
             $stmt = $conn->prepare('update list set claimed = 0, giftDate = NULL where id = ?');
             $stmt->bind_param('i', $itemid);
