@@ -129,7 +129,7 @@ td.buttons {
 }
 
 #column-1 td.buttons {
-    width: inherit;
+    width: 180px;
 }
 
 form {

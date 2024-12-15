@@ -36,7 +36,7 @@ if ($conn->connect_error) {
         </div>
         <div class="column-container" id="table-container">
 <?php
-$access_stmt = $conn->prepare("SELECT can_view, dispname FROM access inner join users on access.can_view = users.id WHERE uid = ?");
+$access_stmt = $conn->prepare("SELECT can_view, dispname FROM access inner join users on access.can_view = users.id WHERE uid = ? order by users.id");
 if (!$access_stmt) die("failed to prepare statement");
 $access_stmt->bind_param("s", $userid); // Bind the username parameter
 $access_stmt->execute();
