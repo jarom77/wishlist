@@ -1,9 +1,16 @@
 // Function to open the date picker modal
-function openDatePicker(itemid) {
+function openDatePicker(itemid,notes) {
     const modal = document.getElementById('datePickerModal');
     modal.style.display = 'flex'; // Show the modal
     const dateItemId = document.getElementById('dateItemId');
     dateItemId.value = itemid;
+    
+    if (notes) {
+        const noteDiv = document.getElementById('multiple-notes');
+        noteDiv.style.display = 'block';
+        const noteText = document.getElementById('notes-text');
+        noteText.innerText = notes;
+    }
 }
 
 // Function to open the item modal

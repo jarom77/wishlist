@@ -62,22 +62,30 @@ do {
     $result = $stmt->get_result();
     
     while ($row = $result->fetch_assoc()) {
-        $claimed_button_code = 'type="button" onclick="openDatePicker(' . $row['id'] . ')"';
-        if ($row['claimed'] == $userid) {
-            $claimed_button_code = 'type="submit" style="background-color: red"';
-        }
         $row_classes = '';
-        if ($row['claimed'] && $person != NULL) $row_classes .= 'claimed ';
+        if ($person != NULL && ($row['claimed'] == $userid && $row['recurring'] || $row['claimed'] && !$row['recurring'])) $row_classes .= 'claimed ';
         $notes = '';
+        $userClaimed = false;
         if ($person != NULL && $row['recurring']) {
             $row_classes .= 'recurring ';
             $getNotes = $conn->prepare('select note from notes where itemid = ?;');
-            $getNotes->bind_param("d", $row['id']);
+            $getNotes->bind_param("i", $row['id']);
             $getNotes->execute();
             $allNotes = $getNotes->get_result();
             while ($next_note = $allNotes->fetch_assoc()) $notes = $notes . $next_note['note'] . ', ';
             if (strlen($notes) > 1) $notes = substr($notes, 0, -2);
+            if (!$notes) $notes = 'none';
             $getNotes->close();
+
+            $getNotes = $conn->prepare('select COUNT(id) from notes where itemid = ? && userid = ?;');
+            $getNotes->bind_param('ii', $row['id'], $userid);
+            $getNotes->execute();
+            $userClaimed = $getNotes->get_result()->fetch_row()[0] != 0;
+            $getNotes->close();
+        }
+        $claimed_button_code = 'type="button" onclick="openDatePicker(' . $row['id'] . ',\'' . $notes . '\')"';
+        if ($row['claimed'] == $userid || $userClaimed) {
+            $claimed_button_code = 'type="submit" style="background-color: red"';
         }
         echo "
                     <tr class=\"$row_classes\" id=\"item${row['id']}\">
@@ -87,8 +95,7 @@ do {
                             <a class="button" href="'.$row['link'].'"><img class="icon" src="icon_open.png"></a>';
         echo '
                             <form action="listEdit.php" method="post">
-                                <input hidden name="itemid" value="' . $row['id'] . '">
-                                <input hidden name="notes" value="' . $notes . '">';
+                                <input hidden name="itemid" value="' . $row['id'] . '">';
         if ($person == NULL) echo '
                                 <button type="button" onclick="openItemWindow(' . $row['id'] .', '. $row['recurring'] .')" name="edit" class="edit">
                                     <img class="icon" src="icon_edit.png" />
@@ -96,7 +103,7 @@ do {
                                 <button type="submit" name="delete" class="trash">
                                     <img class="icon" src="icon_delete.png">
                                 </button>';
-        else if (!($row['recurring'] || $row['claimed'] != 0 && $row['claimed'] != $userid)) echo '
+        else if (!$row['claimed'] || $row['recurring']) echo '
                                 <button '.$claimed_button_code.' name="unclaim" class="check">
                                     <img class="icon" src="icon_check.png" />
                                 </button>';
@@ -124,7 +131,7 @@ $access_stmt->close();
                 <h2>Select date gift will be opened</h2>
                 <input required type="date" id="selectedDate" name="giftDate">
                 <div id="multiple-notes">
-                    <p>Item notes:</p>
+                    <p>Already taken:</p>
                     <p id="notes-text"></p>
                     <input name="note" type="text" maxlength="20" placeholder="color, type, etc">
                 </div>

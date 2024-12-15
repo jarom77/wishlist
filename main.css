@@ -200,6 +200,10 @@ label {
     font-size: 1.3em;
 }
 
+#multiple-notes {
+    display: none;
+}
+
 /* Responsive Design */
 @media screen and (max-width: 768px) {
     .column {
