@@ -63,7 +63,6 @@ do {
     
     while ($row = $result->fetch_assoc()) {
         $row_classes = '';
-        if ($person != NULL && ($row['claimed'] == $userid && $row['recurring'] || $row['claimed'] && !$row['recurring'])) $row_classes .= 'claimed ';
         $notes = '';
         $userClaimed = false;
         if ($person != NULL && $row['recurring']) {
@@ -87,6 +86,7 @@ do {
         if ($row['claimed'] == $userid || $userClaimed) {
             $claimed_button_code = 'type="submit" style="background-color: red"';
         }
+        if ($person != NULL && ($userClaimed || $row['claimed'] && !$row['recurring'])) $row_classes .= 'claimed ';
         echo "
                     <tr class=\"$row_classes\" id=\"item${row['id']}\">
                         <td>${row['text']}</td>
