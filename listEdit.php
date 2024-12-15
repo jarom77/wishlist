@@ -61,6 +61,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else if (isset($_POST['unclaim'])) {
             $stmt = $conn->prepare('update list set claimed = 0, giftDate = NULL where id = ?');
             $stmt->bind_param('i', $itemid);
+            $stmt->execute();
+            $stmt->close();
+        
+            // remove notes
+            $stmt = $conn->prepare('delete from notes where itemid = ? && userid = ?');
+            $stmt->bind_param('ii', $itemid, $userid);
         }
         else die('Invalid button');
         $stmt->execute();
