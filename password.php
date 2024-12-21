@@ -8,6 +8,10 @@ if (!isset($_SESSION['userid'])) {
     exit;
 }
 
+// Retrieve and sanitize input
+$inputPassword = isset($_POST['old_password']) ? trim($_POST['old_password']) : '';
+if (strlen($inputPassword) < 10) die('Password is too short!');
+
 $userid = $_SESSION['userid'];
 include 'config.php';
 
@@ -21,9 +25,6 @@ if ($conn->connect_error) {
 
 // Check if POST request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve and sanitize input
-    $inputPassword = isset($_POST['old_password']) ? trim($_POST['old_password']) : '';
-
     // Prepare the SQL statement to fetch the user
     $stmt = $conn->prepare("SELECT password FROM users WHERE id = ? LIMIT 1");
     if ($stmt) {
