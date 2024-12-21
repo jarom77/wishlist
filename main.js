@@ -31,3 +31,18 @@ function openItemWindow(itemid, recurring) {
     }
 }
 
+// add close event to item modal close button
+const itemCloseButton = document.getElementById('closeItemForm');
+itemCloseButton.addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent the form's default submit behavior
+    const modal = document.getElementById('itemModal');
+    modal.style.display = 'none'; // Hide the modal
+});
+
+// add close event to date modal close button
+const dateCloseButton = document.getElementById('closeDateForm');
+dateCloseButton.addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent the form's default submit behavior
+    const modal = document.getElementById('datePickerModal');
+    modal.style.display = 'none'; // Hide the modal
+});

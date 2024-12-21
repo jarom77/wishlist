@@ -143,6 +143,7 @@ $access_stmt->close();
                 <input hidden name="itemid" id="dateItemId" value="0">
                 <div class="button-container">
                     <button class="dateSubmit" name="claim">Claim</button>
+                    <button class="dateSubmit trash" id="closeDateForm">Close</button>
                 </div>
             </form>
         </div>
@@ -158,6 +159,7 @@ $access_stmt->close();
                 <input hidden name="itemid" id="editItemId" value="0">
                 <div class="button-container">
                     <button class="dateSubmit" name="submit">Done</button>
+                    <button class="dateSubmit trash" id="closeItemForm">Close</button>
                 </div>
             </form>
         </div>
