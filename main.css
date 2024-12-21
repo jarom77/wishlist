@@ -238,6 +238,8 @@ label {
 
 .dateSubmit {
     width: inherit;
+    margin: 0 5px;
+    padding: 0 15px;
 }
 
 input[type="date"] {

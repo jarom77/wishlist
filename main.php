@@ -55,8 +55,8 @@ do {
     else echo $person['dispname'];
     echo '</h2>
                 <table>';
-    if ($person == NULL) $stmt->bind_param("d", $userid); // Bind the username parameter
-    else $stmt->bind_param("d", $person['can_view']);
+    if ($person == NULL) $stmt->bind_param("i", $userid); // Bind the username parameter
+    else $stmt->bind_param("i", $person['can_view']);
     
     $stmt->execute();
     $result = $stmt->get_result();
