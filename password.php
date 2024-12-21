@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->close();
                     echo json_encode(['success' => true, 'redirect' => 'main.php']);
                 } else
-			echo json_encode(['success' => false, 'message' => 'Passwords do not match']);
+                        echo json_encode(['success' => false, 'message' => 'Passwords do not match']);
             } else {
                 // Authentication failed
                 echo json_encode(['success' => false, 'message' => 'Invalid username or password.']);

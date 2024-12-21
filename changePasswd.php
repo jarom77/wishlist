@@ -25,7 +25,7 @@ if (!isset($_SESSION['userid'])) {
             <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password" required>
             <button type="submit">Update Password</button>
         </form>
-	<p id="error-message" class="error-message">Incorrect password</p>
+        <p id="error-message" class="error-message">Incorrect password</p>
     </div>
     <script src="changePasswd.js"></script>
 </body>

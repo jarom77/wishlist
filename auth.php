@@ -39,11 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Verify the password
             if (password_verify($inputPassword, $user['password'])) {
-		// Successful authentication
-		$_SESSION['userid'] = $user['id'];
-		$_SESSION['dispname'] = $user['dispname'];
+                // Successful authentication
+                $_SESSION['userid'] = $user['id'];
+                $_SESSION['dispname'] = $user['dispname'];
 
-		echo json_encode(['success' => true, 'redirect' => 'main.php']);
+                echo json_encode(['success' => true, 'redirect' => 'main.php']);
             } else {
                 // Authentication failed
                 echo json_encode(['success' => false, 'message' => 'Invalid username or password.']);
