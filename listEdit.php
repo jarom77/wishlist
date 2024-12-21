@@ -51,13 +51,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $giftDate = $_POST['giftDate'];
             $stmt = $conn->prepare('update list set claimed = ?, giftDate = ? where id = ? && recurring = 0');
             $stmt->bind_param('isi', $userid, $giftDate, $itemid);
-            $stmt->execute();
-            $stmt->close();
-        
-            // add note
-            $note = $_POST['note'];
-            $stmt = $conn->prepare('insert into notes(itemid, userid, note) values (?, ?, ?)');
-            $stmt->bind_param('iis', $itemid, $userid, $note);
+
+            # determine if item is recurring
+            $recurCheck = $conn->prepare('select recurring from list where id = ?');
+            $recurCheck->bind_param('i', $itemid);
+            $recurCheck->execute();
+            $isRecurring = $recurCheck->get_result()->fetch_row()[0];
+            $recurCheck->close();
+
+            # if recurring, insert 'note' field value
+            if ($isRecurring) {
+                $stmt->execute();
+                $stmt->close();
+                // add note
+                $note = $_POST['note'];
+                $stmt = $conn->prepare('insert into notes(itemid, userid, note) values (?, ?, ?)');
+                $stmt->bind_param('iis', $itemid, $userid, $note);
+            }
         } else if (isset($_POST['unclaim'])) {
             $stmt = $conn->prepare('update list set claimed = 0, giftDate = NULL where id = ?');
             $stmt->bind_param('i', $itemid);

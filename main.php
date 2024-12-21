@@ -64,6 +64,7 @@ do {
     while ($row = $result->fetch_assoc()) {
         $notes = '';
         $userClaimed = false;
+        $userItem = NULL;
         if ($person != NULL && $row['recurring']) {
             $getNotes = $conn->prepare('select note from notes where itemid = ?;');
             $getNotes->bind_param("i", $row['id']);
@@ -77,8 +78,10 @@ do {
             $getNotes = $conn->prepare('select note from notes where itemid = ? && userid = ?;');
             $getNotes->bind_param('ii', $row['id'], $userid);
             $getNotes->execute();
-            $userClaimed = $getNotes->get_result()->fetch_row()[0];
-            if ($userClaimed) $userClaimed = " <b>(you: " . $userClaimed . ')</b>';
+            $rows = $getNotes->get_result()->fetch_row();
+            $userClaimed = $rows !== NULL;
+            if ($userClaimed) $userItem = $rows[0];
+            if ($userItem) $userItem = " <b>(you: " . $userItem . ')</b>';
             $getNotes->close();
         }
         $claimed_button_code = 'type="button" onclick="openDatePicker(' . $row['id'] . ',\'' . $notes . '\')"';
@@ -90,7 +93,7 @@ do {
         if ($person == NULL && $row['recurring']) $row_classes .= 'recurring ';
         echo "
                     <tr class=\"$row_classes\" id=\"item${row['id']}\">
-                        <td>${row['text']}$userClaimed</td>
+                        <td>${row['text']}$userItem</td>
                         <td class=\"buttons\">";
         if ($row['link']) echo '
                             <a class="button" href="'.$row['link'].'"><img class="icon" src="icon_open.png"></a>';
