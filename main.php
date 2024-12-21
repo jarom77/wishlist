@@ -120,7 +120,7 @@ do {
                 </table>';
     if ($person == NULL) echo '
                 <p>Green highlight denotes multiple items</p>
-                <button class="global-button check" onclick="openItemWindow(0,0)">Add New</button>';
+                <button class="global-button check" onclick="openItemWindow(0,\'\')">Add New</button>';
     echo '
             </div>';
 } while ($person = $access_result->fetch_assoc());
@@ -138,7 +138,7 @@ $access_stmt->close();
                 <div id="multiple-notes">
                     <p>Already taken:</p>
                     <p id="notes-text"></p>
-                    <input name="note" type="text" maxlength="20" placeholder="color, type, etc">
+                    <input name="note" id="userNote" type="text" maxlength="20" placeholder="color, type, etc">
                 </div>
                 <input hidden name="itemid" id="dateItemId" value="0">
                 <div class="button-container">
