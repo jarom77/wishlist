@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else if (isset($_POST['claim'])) {
             check_user_owns($conn, $userid, $itemid, False);
             $giftDate = $_POST['giftDate'];
-            $stmt = $conn->prepare('update list set claimed = ?, giftDate = ? where id = ? && recurring = 0');
+            $stmt = $conn->prepare('update list set claimed = ?, giftDate = ? where id = ?');
             $stmt->bind_param('isi', $userid, $giftDate, $itemid);
 
             # determine if item is recurring
